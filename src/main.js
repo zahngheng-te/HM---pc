@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
+//导入axios
+import axios from '@/api'
+//挂载axios
+Vue.prototype.$http = axios
 //导入路由
 import router from './router/index.js'
 

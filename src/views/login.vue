@@ -18,7 +18,7 @@
           <el-checkbox :value="true">我已阅读并同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width:100%">登 录</el-button>
+          <el-button @click="login()" type="primary" style="width:100%">登 录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -51,6 +51,22 @@ export default {
         ]
       }
     };
+  },
+  methods: {
+    login() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.$http
+            .post("authorizations", this.loginForm)
+            .then(res => {
+              this.$router.push("/");
+            })
+            .catch(() => {
+              this.$message.error("手机号或验证码错误！");
+            });
+        }
+      });
+    }
   }
 };
 </script>
