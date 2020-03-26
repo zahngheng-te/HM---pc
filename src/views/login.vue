@@ -2,11 +2,11 @@
   <div class="login-container">
     <el-card class="my-card">
       <img src="../assets/logo_index.png" alt>
-      <el-form>
-        <el-form-item>
+      <el-form :model="loginForm" :rules="rules" ref="loginForm">
+        <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="code">
           <el-input
             v-model="loginForm.code"
             placeholder="请输入验证码"
@@ -32,6 +32,16 @@ export default {
       loginForm: {
         mobile: "",
         code: ""
+      },
+      rules: {
+        mobile: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { len: 11, message: "长度为11个字符", trigger: "blur" }
+        ],
+        code: [
+          { required: true, message: "请输入验证码", trigger: "blur" },
+          { len: 6, message: "长度为6个字符", trigger: "blur" }
+        ]
       }
     };
   }
