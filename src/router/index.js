@@ -4,6 +4,8 @@ import login from '../views/login.vue'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 
+import auth from '@/utils/auth.js'
+
 Vue.use(VueRouter)
 
 
@@ -18,5 +20,12 @@ const routes = [
 ]
 
 const router = new VueRouter({ routes })
+
+
+router.beforeEach((to, from, next) => {
+    const user = auth.getUser()
+    if (to.path !== '/login' && !user.token) return next('/login')
+    next()
+})
 
 export default router

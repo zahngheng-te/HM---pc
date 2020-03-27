@@ -50,17 +50,17 @@
         <el-dropdown class="my-dropdown">
           <span class="el-dropdown-link">
             <!-- 头像 -->
-            <img class="user-avatar" src="../assets/avatar.jpg" alt>
+            <img class="user-avatar" :src="userPhoto" alt>
             <!-- 名字 -->
-            <span class="user-name">张三</span>
+            <span class="user-name">{{userName}}</span>
 
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>
+            <el-dropdown-item @click.native="setting()">
               <span class="el-icon-s-custom"></span> 个人设置
             </el-dropdown-item>
-            <el-dropdown-item>
+            <el-dropdown-item @click.native="logout()">
               <span class="el-icon-switch-button"></span> 退出登录
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -74,16 +74,31 @@
 </template>
 
 <script>
+import auth from "@/utils/auth.js";
 export default {
   name: "my-name",
   data() {
     return {
-      isOpen: true
+      isOpen: true,
+      userName: "",
+      userPhoto: ""
     };
+  },
+  created() {
+    const user = auth.getUser();
+    this.userName = user.name;
+    this.userPhoto = user.photo;
   },
   methods: {
     toggleAside() {
       this.isOpen = !this.isOpen;
+    },
+    setting() {
+      this.$router.push("/setting");
+    },
+    logout() {
+      auth.delUser();
+      this.$router.push("/login");
     }
   }
 };
