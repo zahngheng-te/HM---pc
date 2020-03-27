@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import auth from "@/utils/auth.js";
 export default {
   data() {
     const checkMobile = (rule, value, callback) => {
@@ -59,6 +60,9 @@ export default {
           this.$http
             .post("authorizations", this.loginForm)
             .then(res => {
+              // 存储token信息
+              auth.setUser(res.data.data);
+              // 跳转首页
               this.$router.push("/");
             })
             .catch(() => {
