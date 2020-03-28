@@ -1,9 +1,5 @@
 <template>
-  <div class="container-404">
-    <el-row>
-      <el-button type="primary" plain class="btn">返回首页</el-button>
-    </el-row>
-  </div>
+  <div class="container-404"></div>
 </template>
 
 <script>
@@ -18,11 +14,5 @@ export default {};
   width: 100%;
   height: 100%;
   background: url(../assets/timg.jpg) center;
-  .btn {
-    width: 180px;
-    height: 40px;
-    border-radius: 30px;
-    text-align: center;
-  }
 }
 </style>

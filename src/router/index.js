@@ -4,6 +4,7 @@ import login from '../views/login.vue'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import NotFund from '@/views/404.vue'
+import Article from '@/views/Article.vue'
 
 import auth from '@/utils/auth.js'
 
@@ -14,7 +15,8 @@ const routes = [
     { path: '/login', component: login },
     {
         path: '/', component: Home, children: [
-            { path: '/', component: Welcome }
+            { path: '/', component: Welcome },
+            { path: '/article', component: Article }
         ]
     },
     { path: '*', component: NotFund }
