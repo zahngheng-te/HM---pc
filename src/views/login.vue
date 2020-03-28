@@ -27,6 +27,7 @@
 
 <script>
 import auth from "@/utils/auth.js";
+import { async } from "q";
 export default {
   data() {
     const checkMobile = (rule, value, callback) => {
@@ -55,19 +56,26 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          this.$http
-            .post("authorizations", this.loginForm)
-            .then(res => {
-              // 存储token信息
-              auth.setUser(res.data.data);
-              // 跳转首页
-              this.$router.push("/");
-            })
-            .catch(() => {
-              this.$message.error("手机号或验证码错误！");
-            });
+          //   this.$http
+          //     .post("authorizations", this.loginForm)
+          //     .then(res => {
+          //       // 存储token信息
+          //       auth.setUser(res.data.data);
+          //       // 跳转首页
+          //       this.$router.push("/");
+          //     })
+          //     .catch(() => {
+          //       this.$message.error("手机号或验证码错误！");
+          //     });
+          try {
+            const res = await this.$http.post("authorizations", this.loginForm);
+            auth.setUser(res.data.data);
+            this.$router.push("/");
+          } catch (e) {
+            this.$message.error("手机号或验证码错误！");
+          }
         }
       });
     }

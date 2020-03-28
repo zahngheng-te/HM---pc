@@ -1,9 +1,16 @@
 <template>
-  <div class="container-404"></div>
+  <div class="container-404" @click="fanhui()"></div>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "my-404",
+  methods: {
+    fanhui() {
+      this.$router.push("/");
+    }
+  }
+};
 </script>
 
 <style scoped lang='less'>
