@@ -9,7 +9,7 @@
         </el-breadcrumb>
       </div>
       <!-- 表单 -->
-      <el-form label-width="80px">
+      <el-form label-width="80px" size="small">
         <el-form-item label="状态：">
           <el-radio-group v-model="reqParams.status">
             <el-radio :label="null">全部</el-radio>
@@ -34,83 +34,45 @@
         <el-form-item label="日期：">
           <div class="block">
             <el-date-picker
-              v-model="value2"
+              v-model="dataArr"
               type="daterange"
-              align="right"
-              unlink-panels
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              :picker-options="pickerOptions"
             ></el-date-picker>
           </div>
         </el-form-item>
-        <el-form-item></el-form-item>
+        <el-form-item>
+          <el-button type="primary">筛选</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
+    <my-test>
+      <template v-slot:center="scope">{{scope.info}}</template>
+    </my-test>
   </div>
 </template>
 
 <script>
+import MyTest from "@/components/mytest.vue";
 export default {
+  components: { MyTest },
   name: "my-article",
   data() {
     return {
       reqParams: {
         status: null,
-        channel_id: "",
-        value1: "",
-        value2: ""
+        channel_id: null,
+        begin_pubdate: null,
+        end_pubdate: null
       },
       channelOptions: [
         {
           value: "选项1",
           label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
         }
       ],
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "最近三个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            }
-          }
-        ]
-      }
+      dataArr: []
     };
   },
   created() {}
