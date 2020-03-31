@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import NotFund from '@/views/404.vue'
 import Article from '@/views/Article.vue'
+import Image from '@/views/image.vue'
 
 import auth from '@/utils/auth.js'
 
@@ -16,7 +17,8 @@ const routes = [
     {
         path: '/', component: Home, children: [
             { path: '/', component: Welcome },
-            { path: '/article', component: Article }
+            { path: '/article', component: Article },
+            { path: '/image', component: Image }
         ]
     },
     { path: '*', component: NotFund }
