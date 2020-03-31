@@ -20,7 +20,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道：">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <el-select
+            @change="changeChannel"
+            clearable
+            v-model="reqParams.channel_id"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in channelOptions"
               :key="item.id"
@@ -36,10 +41,12 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            @change="changeData"
+            value-format="yyyy-MM-dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="filterArticle()">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -69,9 +76,23 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作" width="120px">
-          <template>
-            <el-button type="primary" icon="el-icon-edit" circle plain></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle plain></el-button>
+          <template slot-scope="scope">
+            <!-- 编辑按钮 -->
+            <el-button
+              @click="editArticle(scope.row.id)"
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              plain
+            ></el-button>
+            <!-- 删除按钮 -->
+            <el-button
+              @click="deleteArticle(scope.row.id)"
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              plain
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -117,6 +138,49 @@ export default {
     this.getArticles();
   },
   methods: {
+    //删除文章
+    deleteArticle(id) {
+      this.$confirm("此操作将永久删除该文章, 是否继续?", "温馨提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          try {
+            await this.$http.delete(`articles/${id}`);
+            this.$message.success("删除成功！");
+            this.getArticles();
+          } catch (e) {
+            this.$message.error("删除失败！");
+          }
+        })
+        .catch(() => {});
+    },
+    //编辑文章
+    editArticle(id) {
+      this.$router.push(`/publish?id=${id}`);
+    },
+    changeChannel(value) {
+      if (value === "") this.reqParams.channel_id = null;
+    },
+    //筛选文章
+    filterArticle() {
+      //筛选后跳回第一页
+      this.reqParams.page = 1;
+      // 根据reqParams进行筛选展示
+      this.getArticles();
+    },
+    //改变日期
+    changeData(dataArr) {
+      console.log(dataArr);
+      if (dataArr) {
+        this.reqParams.begin_pubdate = dataArr[0];
+        this.reqParams.end_pubdate = dataArr[1];
+      } else {
+        this.reqParams.begin_pubdate = null;
+        this.reqParams.end_pubdate = null;
+      }
+    },
     // 进行分页
     changePager(newPage) {
       // 根据新的页码，重新获取列表数据，进行渲染
