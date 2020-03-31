@@ -1,11 +1,11 @@
 <template>
   <div class="article-container">
+    <!-- 筛选条件区域 -->
     <el-card>
       <!-- 面包屑 -->
       <div slot="header">
-        <my-bread>
-          <slot>内容管理</slot>
-        </my-bread>
+        <!-- 使用面包屑组件 -->
+        <my-bread>內容管理</my-bread>
       </div>
       <!-- 表单 -->
       <el-form label-width="80px" size="small">
@@ -29,17 +29,14 @@
             ></el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="日期：">
-          <div class="block">
-            <el-date-picker
-              v-model="dataArr"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </div>
+          <el-date-picker
+            v-model="dateArr"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="primary">筛选</el-button>
@@ -48,37 +45,56 @@
     </el-card>
     <!-- 筛选结果区域 -->
     <el-card style="margin-top:20px">
-      <div slot="header">根据筛选条件共查询到 0 条结果：</div>
+      <div slot="header">根据筛选条件共查询到 {{total}} 条结果：</div>
       <!-- 表格 -->
-      <el-table :data="articles" style="width: 100%">
+      <el-table :data="articles">
         <el-table-column label="封面">
           <template slot-scope="scope">
             <el-image fit="cover" :src="scope.row.cover.images[0]" style="width:150px;height:100px">
               <div slot="error" class="image-slot">
-                <img src="../assets/shibai.jpg" alt>
+                <img src="../assets/error.gif" style="width:150px;height:100px">
               </div>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题"></el-table-column>
-        <el-table-column prop="date" label="状态"></el-table-column>
-        <el-table-column prop="pubdate" label="发布时间"></el-table-column>
-        <el-table-column prop="date" label="操作"></el-table-column>
+        <el-table-column label="标题" prop="title"></el-table-column>
+        <el-table-column label="状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status===0" type="info">草稿</el-tag>
+            <el-tag v-if="scope.row.status===1">待审核</el-tag>
+            <el-tag v-if="scope.row.status===2" type="success">审核通过</el-tag>
+            <el-tag v-if="scope.row.status===3" type="warning">审核失败</el-tag>
+            <el-tag v-if="scope.row.status===4" type="danger">已删除</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="发布时间" prop="pubdate"></el-table-column>
+        <el-table-column label="操作" width="120px">
+          <template>
+            <el-button type="primary" icon="el-icon-edit" circle plain></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle plain></el-button>
+          </template>
+        </el-table-column>
       </el-table>
-
       <!-- 分页 -->
-      <el-pagination background layout="prev, pager, next" :total="1000" style="margin-top:20px"></el-pagination>
+      <el-pagination
+        style="margin-top:20px"
+        background
+        layout="prev, pager, next"
+        :page-size="reqParams.per_page"
+        :current-page="reqParams.page"
+        :total="total"
+        @current-change="changePager"
+      ></el-pagination>
     </el-card>
   </div>
 </template>
-
-
 
 <script>
 export default {
   name: "my-article",
   data() {
     return {
+      // 筛选条件对象数据
       reqParams: {
         status: null,
         channel_id: null,
@@ -87,22 +103,36 @@ export default {
         page: 1,
         per_page: 20
       },
+      // 频道下拉选项数据
       channelOptions: [],
-      dataArr: [],
-      articles: []
+      dateArr: [],
+      // 文章列表
+      articles: [],
+      // 文章总条数
+      total: 0
     };
   },
   created() {
     this.getChannelOptions();
-    this.getArticle();
+    this.getArticles();
   },
   methods: {
-    async getArticle() {
+    // 进行分页
+    changePager(newPage) {
+      // 根据新的页码，重新获取列表数据，进行渲染
+      this.reqParams.page = newPage;
+      this.getArticles();
+    },
+    // 获取文章列表数据
+    async getArticles() {
       const {
         data: { data }
-      } = await this.$http.get("articles", { Params: this.reqParams });
+      } = await this.$http.get("articles", { params: this.reqParams });
       this.articles = data.results;
+      // 总条数
+      this.total = data.total_count;
     },
+    // 获取频道下拉选项数据
     async getChannelOptions() {
       const {
         data: { data }
