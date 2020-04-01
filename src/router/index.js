@@ -6,7 +6,7 @@ import Welcome from '../views/Welcome.vue'
 import NotFund from '@/views/404.vue'
 import Article from '@/views/Article.vue'
 import Image from '@/views/image.vue'
-
+import Publish from '@/views/Publish.vue'
 import auth from '@/utils/auth.js'
 
 Vue.use(VueRouter)
@@ -18,7 +18,8 @@ const routes = [
         path: '/', component: Home, children: [
             { path: '/', component: Welcome },
             { path: '/article', component: Article },
-            { path: '/image', component: Image }
+            { path: '/image', component: Image },
+            { path: '/publish', component: Publish }
         ]
     },
     { path: '*', component: NotFund }

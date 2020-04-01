@@ -11,6 +11,7 @@ Vue.use(Plugin)
 Vue.prototype.$http = axios
 //导入路由
 import router from './router/index.js'
+import '@/styles/index.less'
 
 //导入element样式并注册组件
 import ElementUI from 'element-ui';
