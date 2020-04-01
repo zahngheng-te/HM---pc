@@ -20,19 +20,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道：">
-          <el-select
-            @change="changeChannel"
-            clearable
-            v-model="reqParams.channel_id"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <!-- <my-channel :value="reqParams.channel_id" @input="reqParams.channel_id=$event"></my-channel> -->
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="日期：">
           <el-date-picker
@@ -113,6 +102,7 @@
 <script>
 export default {
   name: "my-article",
+
   data() {
     return {
       // 筛选条件对象数据
@@ -124,8 +114,6 @@ export default {
         page: 1,
         per_page: 20
       },
-      // 频道下拉选项数据
-      channelOptions: [],
       dateArr: [],
       // 文章列表
       articles: [],
@@ -160,9 +148,7 @@ export default {
     editArticle(id) {
       this.$router.push(`/publish?id=${id}`);
     },
-    changeChannel(value) {
-      if (value === "") this.reqParams.channel_id = null;
-    },
+
     //筛选文章
     filterArticle() {
       //筛选后跳回第一页
@@ -195,13 +181,6 @@ export default {
       this.articles = data.results;
       // 总条数
       this.total = data.total_count;
-    },
-    // 获取频道下拉选项数据
-    async getChannelOptions() {
-      const {
-        data: { data }
-      } = await this.$http.get("channels");
-      this.channelOptions = data.channels;
     }
   }
 };
