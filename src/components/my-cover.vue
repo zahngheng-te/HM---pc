@@ -2,7 +2,8 @@
   <div class="my-cover">
     <!-- 图片按钮 -->
     <div class="btn_img" @click="openDialog()">
-      <img :src="coverImageUrl">
+      <!-- 保证父组件传入图片地址没有的话，显示默认图 -->
+      <img :src="value || coverImageUrl">
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="720px">
@@ -62,9 +63,11 @@
 
 <script>
 import auth from "@/utils/auth";
-import delaultImg from "@/assets/default.png";
+import defaultImg from "@/assets/default.png";
 export default {
   name: "my-cover",
+  // 父传子，图片地址
+  props: ["value"],
   data() {
     return {
       // 控制对话框显示隐藏
@@ -91,7 +94,7 @@ export default {
       // 上传的图片地址
       uploadImageUrl: null,
       // 封面地址
-      coverImageUrl: delaultImg
+      coverImageUrl: defaultImg
     };
   },
   methods: {
@@ -104,7 +107,9 @@ export default {
           return this.$message.warning("请先选中一张图片");
         }
         // 预览
-        this.coverImageUrl = this.selectedImageUrl;
+        // this.coverImageUrl = this.selectedImageUrl
+        // 提交给父组件，让父组件给绑定的数据赋值。
+        this.$emit("input", this.selectedImageUrl);
       }
       if (this.activeName === "upload") {
         // 上传图片
@@ -112,7 +117,9 @@ export default {
           return this.$message.warning("请先上传一张图片");
         }
         // 预览
-        this.coverImageUrl = this.uploadImageUrl;
+        // this.coverImageUrl = this.uploadImageUrl
+        // 提交给父组件，让父组件给绑定的数据赋值。
+        this.$emit("input", this.uploadImageUrl);
       }
       // 关闭对话框
       this.dialogVisible = false;
@@ -135,6 +142,8 @@ export default {
       this.activeName = "image";
 
       this.dialogVisible = true;
+      // 只有用户打开了对话框，才有选择素材的需求，再去加载数据才是合理的。
+      // 而且每次打开对话框，都可以拿到最新的素材数据。
       this.getImages();
     },
     // 全部 收藏
