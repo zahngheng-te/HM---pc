@@ -8,6 +8,7 @@ import Article from '@/views/Article.vue'
 import Image from '@/views/image.vue'
 import Publish from '@/views/Publish.vue'
 import comment from '@/views/comment.vue'
+import Fans from '@/views/Fans.vue'
 import auth from '@/utils/auth.js'
 
 Vue.use(VueRouter)
@@ -21,7 +22,8 @@ const routes = [
             { path: '/article', component: Article },
             { path: '/image', component: Image },
             { path: '/publish', component: Publish },
-            { path: '/comment', component: comment }
+            { path: '/comment', component: comment },
+            { path: '/fans', component: Fans }
 
         ]
     },
