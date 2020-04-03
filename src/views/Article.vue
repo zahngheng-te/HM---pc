@@ -122,7 +122,6 @@ export default {
     };
   },
   created() {
-    this.getChannelOptions();
     this.getArticles();
   },
   methods: {
