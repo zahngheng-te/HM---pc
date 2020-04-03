@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import eventBus from "@/utils/eventBus.js";
 import auth from "@/utils/auth.js";
 export default {
   name: "my-name",
@@ -89,6 +90,9 @@ export default {
     const user = auth.getUser();
     this.userName = user.name;
     this.userPhoto = user.photo;
+    eventBus.$on("updateUserName", data => {
+      this.userName = data;
+    });
   },
   methods: {
     toggleAside() {
