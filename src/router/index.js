@@ -1,22 +1,23 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
-import login from '../views/login.vue'
-import Home from '../views/Home.vue'
-import Welcome from '../views/Welcome.vue'
-import NotFund from '@/views/404.vue'
-import Article from '@/views/Article.vue'
-import Image from '@/views/image.vue'
-import Publish from '@/views/Publish.vue'
-import comment from '@/views/comment.vue'
-import Fans from '@/views/Fans.vue'
-import Setting from '@/views/Setting.vue'
+// 导入组件(路由懒加载)
+const Login = () => import('../views/login.vue')
+const Home = () => import('../views/Home.vue')
+const Welcome = () => import('../views/Welcome.vue')
+const NotFound = () => import('../views/404.vue')
+const Article = () => import('../views/Article.vue')
+const Image = () => import('../views/image.vue')
+const Publish = () => import('../views/Publish.vue')
+const comment = () => import('../views/comment.vue')
+const Fans = () => import('../views/Fans.vue')
+const Setting = () => import('../views/Setting.vue')
 import auth from '@/utils/auth.js'
 
 Vue.use(VueRouter)
 
 
 const routes = [
-    { path: '/login', component: login },
+    { path: '/login', component: Login },
     {
         path: '/', component: Home, children: [
             { path: '/', component: Welcome },
@@ -29,7 +30,7 @@ const routes = [
 
         ]
     },
-    { path: '*', component: NotFund }
+    { path: '*', component: NotFound }
 
 ]
 
