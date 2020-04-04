@@ -146,7 +146,6 @@ export default {
     margin-bottom: 30px;
     p {
       margin: 10px 0;
-      font-size: 14px;
     }
   }
 }

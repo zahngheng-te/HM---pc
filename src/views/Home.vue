@@ -87,11 +87,18 @@ export default {
     };
   },
   created() {
+    // 1. 从本地存储中获取数据
     const user = auth.getUser();
+    // 2. 给data中数据赋值
     this.userName = user.name;
     this.userPhoto = user.photo;
+    // 接收Setting组件的传的用户名称的值
     eventBus.$on("updateUserName", data => {
       this.userName = data;
+    });
+    // 接收Setting组件的传的用户头像的值
+    eventBus.$on("updateUserPhoto", data => {
+      this.userPhoto = data;
     });
   },
   methods: {

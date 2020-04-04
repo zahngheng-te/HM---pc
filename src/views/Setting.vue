@@ -27,7 +27,8 @@
         <el-col :span="12">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action
+            :http-request="uploadPhoto"
             :show-file-list="false"
           >
             <img v-if="userInfo.photo" :src="userInfo.photo" class="avatar">
@@ -53,13 +54,37 @@ export default {
         email: "",
         photo: ""
       },
-      imageUrl: null
+      headers: {
+        Authorization: `Bearer ${auth.getUser().token}`
+      }
     };
   },
   created() {
     this.getUserInfo();
   },
   methods: {
+    //上传头像
+    async uploadPhoto({ file }) {
+      // console.log(param)  === {file:'选择图片的文件对象'}
+      // axios + FormData + file对象
+      const formData = new FormData();
+      formData.append("photo", file);
+      const {
+        data: { data }
+      } = await this.$http.patch("user/photo", formData);
+      // 上传成功
+      // 提示
+      this.$message.success("修改头像成功");
+      // 本地预览
+      this.userInfo.photo = data.photo;
+      // 同步home组件
+      eventBus.$emit("updateUserPhoto", data.photo);
+      // 同步本地存储
+      const user = auth.getUser();
+      user.photo = data.photo;
+      auth.setUser(user);
+    },
+
     //获取用户数据
     async getUserInfo() {
       const {
